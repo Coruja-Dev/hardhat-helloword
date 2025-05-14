@@ -25,5 +25,9 @@
   },
   "scripts": {
     "test": "yarn hardhat test"
+  },
+  "dependencies": {
+    "@scrypt-inc/cli-btc": "^1.0.2",
+    "global": "^4.4.0"
   }
 }
