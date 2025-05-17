@@ -2,8 +2,7 @@ import {
   time,
   loadFixture,
 } from "@nomicfoundation/hardhat-toolbox/network-helpers";
-import { anyValue } from "@nomicfoundation/hardhat-chai-matchers/withArgs";
-import { expect } from "chai";
+import { expect, assert } from "chai";
 import hre from "hardhat";
 
 describe("HelloWorld", function () {
@@ -38,4 +37,26 @@ describe("HelloWorld", function () {
     expect(message).to.equal("new message");
   });
 
+  it('should update the message multiple times', async () => {
+    const { helloWorld } = await deployFixture()
+
+    await helloWorld.setMessage('First Update')
+    expect(await helloWorld.message()).to.equal('First Update')
+
+    await helloWorld.setMessage('Second Update')
+    expect(await helloWorld.message()).to.equal('Second Update')
+  })
+
+
+  /*
+  Since there's no access control, anyone can call setMessage(). You can verify this:
+  */
+  it('should allow other accounts to update the message', async () => {
+    const { helloWorld, otherAccount } = await deployFixture()
+
+    await helloWorld.connect(otherAccount).setMessage('From other account')
+    const result = await helloWorld.message()
+
+    expect(result).to.equal('From other account')
+  })
 });
